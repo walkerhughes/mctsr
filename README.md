@@ -36,5 +36,8 @@ Node Value           : 1.7
 
 ...
 
-**Final Answer:** The capital of France is Paris. Renowned for its rich history and immense cultural influence, Paris is home to iconic landmarks such as the Eiffel Tower and the Louvre Museum. This vibrant city is a global center for art, fashion, and gastronomy, drawing millions of visitors each year.
+**Final Answer:** The capital of France is Paris. Renowned for its rich history and immense 
+cultural influence, Paris is home to iconic landmarks such as the Eiffel Tower and the Louvre 
+Museum. This vibrant city is a global center for art, fashion, and gastronomy, drawing millions 
+of visitors each year.
 ```
