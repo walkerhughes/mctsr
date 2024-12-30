@@ -1,7 +1,9 @@
 import re
 from openai import OpenAI
 from mctsr.settings.constants import OPENAI_MODEL
-
+from mctsr.utils.prompts import ANSWER_CRITIQUE_PROMPT
+from mctsr.utils.prompts import DRAFT_ANSWER_CRITIQUE_PROMPT
+from mctsr.utils.prompts import IMPROVED_ANSWER_PROMPT
 
 
 def chat_completion_request_openai(client: OpenAI, model: str = OPENAI_MODEL, prompt: str = ""):
@@ -20,44 +22,17 @@ def chat_completion_request_openai(client: OpenAI, model: str = OPENAI_MODEL, pr
 
 
 def get_draft_answer_critique(client: OpenAI, model: str = OPENAI_MODEL, question = "", draft_answer = ""):
-    prompt = (
-        f"Question: {question}"
-        f"Draft Answer: {draft_answer}"
-        "Please critique the draft answer."
-        "Carefully assess if the answer is correct of not and why."
-        "Consider multiple ways of verifying if the answer is correct."
-        "DO: Point out EVERY flaw and hold the draft answer to a very high standard."
-        "DO: Provide specific recommendations to improve the answer."
-        "DO: Think step by step."
-        "DO NOT provide a revised answer"
-    )
+    prompt = DRAFT_ANSWER_CRITIQUE_PROMPT.format(question=question, draft_answer=draft_answer)
     return chat_completion_request_openai(client=client, model=model, prompt=prompt)
 
 
 def get_improved_answer(client: OpenAI, model: str = OPENAI_MODEL, question="", draft_answer="", critique=""):
-    prompt = (
-        f"Question: {question}"
-        f"Draft Answer: {draft_answer}"
-        f"Critique: {critique}"
-        "Please improve the draft answer based on the critique following this format:"
-        "Reasoning Process: <step-by-ste- reasoning process>\n"
-        "Verification: <verification of the facts>\n"
-        "Final Answer: <the improved and verified answer>\n"
-    )
+    prompt = IMPROVED_ANSWER_PROMPT.format(question=question, draft_answer=draft_answer, critique=critique)
     return chat_completion_request_openai(client=client, model=model, prompt=prompt)
 
 
-def get_answer_rating(client: OpenAI, model: str = OPENAI_MODEL, question="", answer=""):
-    prompt = (
-        f"Question: {question}"
-        f"Answer: {answer}"
-        "As an expert on this topic, please provide a detailed critique "
-        "Provide ONLY a critique, not a suggested answer."
-        "Then, rate the answer on a scale of 0 to 100."
-        "The response should be in the following format:"
-        "Critique: <detailed critique>\n"
-        "Rating: <0 to 100 rating>\n"
-    )
+def get_answer_rating(client: OpenAI, model: str = OPENAI_MODEL, question="", draft_answer=""):
+    prompt = ANSWER_CRITIQUE_PROMPT.format(question=question, draft_answer=draft_answer)
     response = chat_completion_request_openai(client=client, model=model, prompt=prompt)
 
     try: 
